@@ -12,7 +12,9 @@ const App = () => {
   const [DATA_2026, setData2026] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCompanies, setSelectedCompanies] = useState([]);
+  const [selectedSankeyCompanies, setSelectedSankeyCompanies] = useState([]); // Para filtro de Sankey
   const [filterOpen, setFilterOpen] = useState(false);
+  const [sankeyFilterOpen, setSankeyFilterOpen] = useState(false); // Para dropdown de Sankey
   const [renewalFilter, setRenewalFilter] = useState('all'); // 'all', 'renewed', 'not-renewed', 'new'
 
   // Estado para el modal de detalles
@@ -789,10 +791,21 @@ const App = () => {
               </div>
             )}
 
+
             {/* Gráfico Tab - Sankey Diagram */}
             {migrationTab === 'grafico' && (
               <div className="mt-8">
-                <SankeyDiagram migrationMatrix={migrationMatrix} />
+                <SankeyDiagram
+                  migrationMatrix={
+                    selectedSankeyCompanies.length === 0
+                      ? migrationMatrix
+                      : migrationMatrix.filter(m => selectedSankeyCompanies.includes(m.origin))
+                  }
+                  selectedCompanies={selectedSankeyCompanies}
+                  onCompaniesChange={setSelectedSankeyCompanies}
+                  filterOpen={sankeyFilterOpen}
+                  onFilterToggle={() => setSankeyFilterOpen(!sankeyFilterOpen)}
+                />
               </div>
             )}
           </div>
