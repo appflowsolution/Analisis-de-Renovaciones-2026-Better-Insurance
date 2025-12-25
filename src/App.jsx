@@ -2,9 +2,11 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Users, UserCheck, UserMinus, ArrowRightLeft, Search, TrendingUp, TrendingDown, LayoutDashboard, ClipboardList, DollarSign, ArrowUpRight, Target, X } from 'lucide-react';
 import logo from './assets/logo.jpg';
 import { loadData2025, loadData2026 } from './data';
+import SankeyDiagram from './SankeyDiagram';
 
 const App = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [migrationTab, setMigrationTab] = useState('detalle'); // 'detalle' or 'grafico'
   const [searchTerm, setSearchTerm] = useState('');
   const [DATA_2025, setData2025] = useState([]);
   const [DATA_2026, setData2026] = useState([]);
@@ -471,292 +473,328 @@ const App = () => {
 
         {activeTab === 'migracion' && (
           <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8">
-            <div className="mb-6 flex items-start justify-between">
-              <div>
-                <h3 className="text-2xl font-bold text-slate-800 mb-2 flex items-center gap-3">
-                  <ArrowRightLeft className="text-teal-500" size={28} />
-                  Matriz de Migración por Compañía
-                </h3>
-                <p className="text-sm text-slate-500">Flujo de pólizas entre compañías 2025 → 2026</p>
+            <div className="mb-6">
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <h3 className="text-2xl font-bold text-slate-800 mb-2 flex items-center gap-3">
+                    <ArrowRightLeft className="text-teal-500" size={28} />
+                    Matriz de Migración por Compañía
+                  </h3>
+                  <p className="text-sm text-slate-500">Flujo de pólizas entre compañías 2025 → 2026</p>
+                </div>
+
+                {/* Filtro de compañías - solo en pestaña Detalle */}
+                {migrationTab === 'detalle' && (
+                  <div className="relative">
+                    <button
+                      onClick={() => setFilterOpen(!filterOpen)}
+                      className="flex items-center gap-2 px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors"
+                    >
+                      <Search size={16} className="text-slate-600" />
+                      <span className="text-sm font-semibold text-slate-700">
+                        {selectedCompanies.length === 0
+                          ? 'Todas las compañías'
+                          : `${selectedCompanies.length} seleccionada${selectedCompanies.length > 1 ? 's' : ''}`}
+                      </span>
+                    </button>
+
+                    {filterOpen && (
+                      <>
+                        {/* Overlay para cerrar al hacer clic fuera */}
+                        <div
+                          className="fixed inset-0 z-10"
+                          onClick={() => setFilterOpen(false)}
+                        />
+
+                        <div className="absolute right-0 mt-2 w-64 bg-white border border-slate-200 rounded-lg shadow-lg z-20 max-h-96 overflow-y-auto">
+                          <div className="p-3 border-b border-slate-200">
+                            <button
+                              onClick={() => {
+                                setSelectedCompanies([]);
+                                setFilterOpen(false);
+                              }}
+                              className="text-xs font-semibold text-teal-600 hover:text-teal-700"
+                            >
+                              Limpiar filtro
+                            </button>
+                          </div>
+                          <div className="p-2">
+                            {(() => {
+                              const companies = [...new Set(migrationMatrix.map(m => m.origin))].sort();
+                              return companies.map(company => (
+                                <label key={company} className="flex items-center gap-2 px-3 py-2 hover:bg-slate-50 rounded cursor-pointer">
+                                  <input
+                                    type="checkbox"
+                                    checked={selectedCompanies.includes(company)}
+                                    onChange={(e) => {
+                                      if (e.target.checked) {
+                                        setSelectedCompanies([...selectedCompanies, company]);
+                                      } else {
+                                        setSelectedCompanies(selectedCompanies.filter(c => c !== company));
+                                      }
+                                    }}
+                                    className="w-4 h-4 text-teal-600 rounded border-slate-300 focus:ring-teal-500"
+                                  />
+                                  <span className="text-sm text-slate-700">{company}</span>
+                                </label>
+                              ));
+                            })()}
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
               </div>
 
-              {/* Filtro de compañías */}
-              <div className="relative">
+              {/* Tab Navigation */}
+              <div className="flex gap-2 border-b border-slate-200">
                 <button
-                  onClick={() => setFilterOpen(!filterOpen)}
-                  className="flex items-center gap-2 px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors"
+                  onClick={() => setMigrationTab('detalle')}
+                  className={`px-6 py-3 font-semibold text-sm transition-colors border-b-2 ${migrationTab === 'detalle'
+                    ? 'border-teal-500 text-teal-600'
+                    : 'border-transparent text-slate-500 hover:text-slate-700'
+                    }`}
                 >
-                  <Search size={16} className="text-slate-600" />
-                  <span className="text-sm font-semibold text-slate-700">
-                    {selectedCompanies.length === 0
-                      ? 'Todas las compañías'
-                      : `${selectedCompanies.length} seleccionada${selectedCompanies.length > 1 ? 's' : ''}`}
-                  </span>
+                  Detalle
                 </button>
-
-                {filterOpen && (
-                  <>
-                    {/* Overlay para cerrar al hacer clic fuera */}
-                    <div
-                      className="fixed inset-0 z-10"
-                      onClick={() => setFilterOpen(false)}
-                    />
-
-                    <div className="absolute right-0 mt-2 w-64 bg-white border border-slate-200 rounded-lg shadow-lg z-20 max-h-96 overflow-y-auto">
-                      <div className="p-3 border-b border-slate-200">
-                        <button
-                          onClick={() => {
-                            setSelectedCompanies([]);
-                            setFilterOpen(false);
-                          }}
-                          className="text-xs font-semibold text-teal-600 hover:text-teal-700"
-                        >
-                          Limpiar filtro
-                        </button>
-                      </div>
-                      <div className="p-2">
-                        {(() => {
-                          const companies = [...new Set(migrationMatrix.map(m => m.origin))].sort();
-                          return companies.map(company => (
-                            <label key={company} className="flex items-center gap-2 px-3 py-2 hover:bg-slate-50 rounded cursor-pointer">
-                              <input
-                                type="checkbox"
-                                checked={selectedCompanies.includes(company)}
-                                onChange={(e) => {
-                                  if (e.target.checked) {
-                                    setSelectedCompanies([...selectedCompanies, company]);
-                                  } else {
-                                    setSelectedCompanies(selectedCompanies.filter(c => c !== company));
-                                  }
-                                }}
-                                className="w-4 h-4 text-teal-600 rounded border-slate-300 focus:ring-teal-500"
-                              />
-                              <span className="text-sm text-slate-700">{company}</span>
-                            </label>
-                          ));
-                        })()}
-                      </div>
-                    </div>
-                  </>
-                )}
+                <button
+                  onClick={() => setMigrationTab('grafico')}
+                  className={`px-6 py-3 font-semibold text-sm transition-colors border-b-2 ${migrationTab === 'grafico'
+                    ? 'border-teal-500 text-teal-600'
+                    : 'border-transparent text-slate-500 hover:text-slate-700'
+                    }`}
+                >
+                  Gráfico
+                </button>
               </div>
             </div>
 
-            <div className="space-y-6">
-              {(() => {
-                // Agrupar por compañía de origen (excluir "Nueva Póliza")
-                const grouped = {};
-                migrationMatrix.forEach(m => {
-                  // No mostrar "Nueva Póliza" como compañía de origen
-                  if (m.origin === 'Nueva Póliza') return;
+            {/* Detalle Tab - Existing migration cards */}
+            {migrationTab === 'detalle' && (
+              <div className="space-y-6">
+                {(() => {
+                  // Agrupar por compañía de origen (excluir "Nueva Póliza")
+                  const grouped = {};
+                  migrationMatrix.forEach(m => {
+                    // No mostrar "Nueva Póliza" como compañía de origen
+                    if (m.origin === 'Nueva Póliza') return;
 
-                  if (!grouped[m.origin]) {
-                    grouped[m.origin] = [];
-                  }
-                  grouped[m.origin].push(m);
-                });
+                    if (!grouped[m.origin]) {
+                      grouped[m.origin] = [];
+                    }
+                    grouped[m.origin].push(m);
+                  });
 
-                // Agregar compañías que solo aparecen en 2026 (como destino de nuevas pólizas o migraciones)
-                const allDestinations = new Set(migrationMatrix.map(m => m.dest).filter(d => d !== 'No Renovó'));
-                allDestinations.forEach(dest => {
-                  if (!grouped[dest]) {
-                    // Esta compañía no existía en 2025, crear entrada vacía
-                    grouped[dest] = [];
-                  }
-                });
+                  // Agregar compañías que solo aparecen en 2026 (como destino de nuevas pólizas o migraciones)
+                  const allDestinations = new Set(migrationMatrix.map(m => m.dest).filter(d => d !== 'No Renovó'));
+                  allDestinations.forEach(dest => {
+                    if (!grouped[dest]) {
+                      // Esta compañía no existía en 2025, crear entrada vacía
+                      grouped[dest] = [];
+                    }
+                  });
 
 
 
-                // Filtrar por compañías seleccionadas
-                const filteredEntries = selectedCompanies.length === 0
-                  ? Object.entries(grouped)
-                  : Object.entries(grouped).filter(([origin]) => selectedCompanies.includes(origin));
+                  // Filtrar por compañías seleccionadas
+                  const filteredEntries = selectedCompanies.length === 0
+                    ? Object.entries(grouped)
+                    : Object.entries(grouped).filter(([origin]) => selectedCompanies.includes(origin));
 
-                return filteredEntries.map(([origin, destinations]) => {
-                  // Verificar si esta compañía existía en 2025 (tiene pólizas de origen)
-                  const existedIn2025 = migrationMatrix.some(m => m.origin === origin && m.origin !== m.dest);
+                  return filteredEntries.map(([origin, destinations]) => {
+                    // Verificar si esta compañía existía en 2025 (tiene pólizas de origen)
+                    const existedIn2025 = migrationMatrix.some(m => m.origin === origin && m.origin !== m.dest);
 
-                  const totalPol = existedIn2025 ? destinations.reduce((acc, d) => acc + d.pol, 0) : 0;
-                  const totalMiem = existedIn2025 ? destinations.reduce((acc, d) => acc + d.miem, 0) : 0;
+                    const totalPol = existedIn2025 ? destinations.reduce((acc, d) => acc + d.pol, 0) : 0;
+                    const totalMiem = existedIn2025 ? destinations.reduce((acc, d) => acc + d.miem, 0) : 0;
 
-                  // Calcular total 2026: TODAS las pólizas que esta compañía tiene en 2026
-                  // Esto incluye: fidelizadas + las que llegaron de otras compañías
-                  const total2026Pol = migrationMatrix.filter(m => m.dest === origin).reduce((acc, m) => acc + m.pol, 0);
-                  const total2026Miem = migrationMatrix.filter(m => m.dest === origin).reduce((acc, m) => acc + m.miem, 0);
+                    // Calcular total 2026: TODAS las pólizas que esta compañía tiene en 2026
+                    // Esto incluye: fidelizadas + las que llegaron de otras compañías
+                    const total2026Pol = migrationMatrix.filter(m => m.dest === origin).reduce((acc, m) => acc + m.pol, 0);
+                    const total2026Miem = migrationMatrix.filter(m => m.dest === origin).reduce((acc, m) => acc + m.miem, 0);
 
-                  return (
-                    <div key={origin} className="border border-slate-200 rounded-xl overflow-hidden">
-                      {/* Header de la compañía */}
-                      <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
-                        <div className="flex items-center justify-between">
-                          <h4 className="text-lg font-bold text-slate-800">{origin}</h4>
-                          <div className="flex items-center gap-6">
-                            <div className="text-left">
-                              <p className="text-xs text-slate-500 uppercase font-bold">Total 2025</p>
-                              <div className="flex items-baseline gap-2">
-                                <p className="text-2xl font-black text-slate-900">{totalPol}</p>
-                                <p className="text-sm font-bold text-slate-600">pólizas</p>
+                    return (
+                      <div key={origin} className="border border-slate-200 rounded-xl overflow-hidden">
+                        {/* Header de la compañía */}
+                        <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                          <div className="flex items-center justify-between">
+                            <h4 className="text-lg font-bold text-slate-800">{origin}</h4>
+                            <div className="flex items-center gap-6">
+                              <div className="text-left">
+                                <p className="text-xs text-slate-500 uppercase font-bold">Total 2025</p>
+                                <div className="flex items-baseline gap-2">
+                                  <p className="text-2xl font-black text-slate-900">{totalPol}</p>
+                                  <p className="text-sm font-bold text-slate-600">pólizas</p>
+                                </div>
+                                <p className="text-xs text-slate-500">{totalMiem} miembros</p>
                               </div>
-                              <p className="text-xs text-slate-500">{totalMiem} miembros</p>
-                            </div>
-                            <ArrowRightLeft className="text-slate-400" size={24} />
-                            <div className="text-left">
-                              <p className="text-xs text-teal-600 uppercase font-bold">Total 2026</p>
-                              <div className="flex items-baseline gap-2">
-                                <p className="text-2xl font-black text-teal-700">{total2026Pol}</p>
-                                <p className="text-sm font-bold text-teal-600">pólizas</p>
+                              <ArrowRightLeft className="text-slate-400" size={24} />
+                              <div className="text-left">
+                                <p className="text-xs text-teal-600 uppercase font-bold">Total 2026</p>
+                                <div className="flex items-baseline gap-2">
+                                  <p className="text-2xl font-black text-teal-700">{total2026Pol}</p>
+                                  <p className="text-sm font-bold text-teal-600">pólizas</p>
+                                </div>
+                                <p className="text-xs text-teal-600">{total2026Miem} miembros</p>
                               </div>
-                              <p className="text-xs text-teal-600">{total2026Miem} miembros</p>
                             </div>
                           </div>
                         </div>
-                      </div>
 
-                      {/* Destinos */}
-                      <div className="p-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                          {/* Pólizas que SALEN de esta compañía */}
-                          {destinations.sort((a, b) => {
-                            // Orden: No Renovó, Fidelizado, Migrado (alfabético)
-                            if (a.dest === 'No Renovó') return -1;
-                            if (b.dest === 'No Renovó') return 1;
-                            if (a.origin === a.dest) return -1;
-                            if (b.origin === b.dest) return 1;
-                            return a.dest.localeCompare(b.dest);
-                          }).map((m, idx) => (
-                            <div
-                              key={idx}
-                              onClick={() => {
-                                if (m.dest === 'No Renovó') {
-                                  openModal(
-                                    `Bajas de ${m.origin}`,
-                                    item => item.COMPANIA === m.origin && !item.renovado && !item.nuevo
-                                  );
-                                } else {
-                                  openModal(
-                                    `${m.origin === m.dest ? 'Fidelizados en' : 'Migrados a'} ${m.dest}`,
-                                    item => item.COMPANIA === m.origin && item.compania2026 === m.dest
-                                  );
-                                }
-                              }}
-                              className={`p-3 rounded-lg border-2 cursor-pointer transition-transform hover:scale-105 ${m.origin === m.dest
-                                ? 'bg-emerald-50 border-emerald-200 hover:bg-emerald-100'
-                                : m.dest === 'No Renovó'
-                                  ? 'bg-rose-50 border-rose-200 hover:bg-rose-100'
-                                  : 'bg-blue-50 border-blue-200 hover:bg-blue-100'
-                                }`}>
-                              <div className="flex items-center justify-between mb-2">
-                                <div className="flex items-center gap-2">
-                                  {m.dest === 'No Renovó' ? (
-                                    <TrendingDown className="text-rose-600" size={20} />
-                                  ) : (
-                                    <TrendingUp className={m.origin === m.dest ? 'text-emerald-600' : 'text-blue-600'} size={20} />
-                                  )}
-                                  <span className={`text-xs font-bold uppercase ${m.origin === m.dest
-                                    ? 'text-emerald-700'
-                                    : m.dest === 'No Renovó'
-                                      ? 'text-rose-700'
-                                      : 'text-blue-700'
-                                    }`}>
-                                    {m.origin === m.dest ? 'Fidelizado' : m.dest === 'No Renovó' ? 'Baja' : 'Migrado'}
-                                  </span>
-                                </div>
-                              </div>
-
-                              <p className={`text-sm font-bold mb-1 ${m.origin === m.dest
-                                ? 'text-emerald-800'
-                                : m.dest === 'No Renovó'
-                                  ? 'text-rose-800'
-                                  : 'text-blue-800'
-                                }`}>
-                                {m.dest === 'No Renovó' ? 'No Renovó' : `→ ${m.dest}`}
-                              </p>
-
-                              <div className="flex items-baseline gap-2 mb-1">
-                                <p className={`text-2xl font-black ${m.origin === m.dest
-                                  ? 'text-emerald-900'
+                        {/* Destinos */}
+                        <div className="p-6">
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            {/* Pólizas que SALEN de esta compañía */}
+                            {destinations.sort((a, b) => {
+                              // Orden: No Renovó, Fidelizado, Migrado (alfabético)
+                              if (a.dest === 'No Renovó') return -1;
+                              if (b.dest === 'No Renovó') return 1;
+                              if (a.origin === a.dest) return -1;
+                              if (b.origin === b.dest) return 1;
+                              return a.dest.localeCompare(b.dest);
+                            }).map((m, idx) => (
+                              <div
+                                key={idx}
+                                onClick={() => {
+                                  if (m.dest === 'No Renovó') {
+                                    openModal(
+                                      `Bajas de ${m.origin}`,
+                                      item => item.COMPANIA === m.origin && !item.renovado && !item.nuevo
+                                    );
+                                  } else {
+                                    openModal(
+                                      `${m.origin === m.dest ? 'Fidelizados en' : 'Migrados a'} ${m.dest}`,
+                                      item => item.COMPANIA === m.origin && item.compania2026 === m.dest
+                                    );
+                                  }
+                                }}
+                                className={`p-3 rounded-lg border-2 cursor-pointer transition-transform hover:scale-105 ${m.origin === m.dest
+                                  ? 'bg-emerald-50 border-emerald-200 hover:bg-emerald-100'
                                   : m.dest === 'No Renovó'
-                                    ? 'text-rose-900'
-                                    : 'text-blue-900'
-                                  }`}>{m.pol}</p>
-                                <p className="text-sm font-bold text-slate-600">pólizas</p>
-                              </div>
-                              <p className="text-xs text-slate-600">{m.miem} miembros</p>
-                            </div>
-                          ))}
-
-                          {/* Pólizas que LLEGAN desde otras compañías (migraciones) */}
-                          {(() => {
-                            const migrations = migrationMatrix.filter(m => m.dest === origin && m.origin !== origin && m.origin !== 'Nueva Póliza');
-                            if (migrations.length === 0) return null;
-
-                            const totalMigrations = migrations.reduce((acc, m) => acc + m.pol, 0);
-                            const totalMiemMigrations = migrations.reduce((acc, m) => acc + m.miem, 0);
-
-                            return (
-                              <div
-                                onClick={() => openModal(
-                                  `Migraciones hacia ${origin}`,
-                                  item => item.compania2026 === origin && item.COMPANIA !== origin && !item.nuevo
-                                )}
-                                className="p-3 rounded-lg border-2 bg-indigo-50 border-indigo-200 cursor-pointer transition-transform hover:scale-105 hover:bg-indigo-100">
+                                    ? 'bg-rose-50 border-rose-200 hover:bg-rose-100'
+                                    : 'bg-blue-50 border-blue-200 hover:bg-blue-100'
+                                  }`}>
                                 <div className="flex items-center justify-between mb-2">
                                   <div className="flex items-center gap-2">
-                                    <TrendingUp className="text-indigo-600" size={20} />
-                                    <span className="text-xs font-bold uppercase text-indigo-700">Migraciones</span>
+                                    {m.dest === 'No Renovó' ? (
+                                      <TrendingDown className="text-rose-600" size={20} />
+                                    ) : (
+                                      <TrendingUp className={m.origin === m.dest ? 'text-emerald-600' : 'text-blue-600'} size={20} />
+                                    )}
+                                    <span className={`text-xs font-bold uppercase ${m.origin === m.dest
+                                      ? 'text-emerald-700'
+                                      : m.dest === 'No Renovó'
+                                        ? 'text-rose-700'
+                                        : 'text-blue-700'
+                                      }`}>
+                                      {m.origin === m.dest ? 'Fidelizado' : m.dest === 'No Renovó' ? 'Baja' : 'Migrado'}
+                                    </span>
                                   </div>
                                 </div>
 
-                                <p className="text-sm font-bold mb-1 text-indigo-800">← Desde otras compañías</p>
+                                <p className={`text-sm font-bold mb-1 ${m.origin === m.dest
+                                  ? 'text-emerald-800'
+                                  : m.dest === 'No Renovó'
+                                    ? 'text-rose-800'
+                                    : 'text-blue-800'
+                                  }`}>
+                                  {m.dest === 'No Renovó' ? 'No Renovó' : `→ ${m.dest}`}
+                                </p>
 
                                 <div className="flex items-baseline gap-2 mb-1">
-                                  <p className="text-2xl font-black text-indigo-900">{totalMigrations}</p>
+                                  <p className={`text-2xl font-black ${m.origin === m.dest
+                                    ? 'text-emerald-900'
+                                    : m.dest === 'No Renovó'
+                                      ? 'text-rose-900'
+                                      : 'text-blue-900'
+                                    }`}>{m.pol}</p>
                                   <p className="text-sm font-bold text-slate-600">pólizas</p>
                                 </div>
-                                <p className="text-xs text-slate-600">{totalMiemMigrations} miembros</p>
+                                <p className="text-xs text-slate-600">{m.miem} miembros</p>
                               </div>
-                            );
-                          })()}
+                            ))}
 
-                          {/* Pólizas completamente NUEVAS */}
-                          {(() => {
-                            const newPolicies = migrationMatrix.filter(m => m.dest === origin && m.origin === 'Nueva Póliza');
-                            if (newPolicies.length === 0) return null;
+                            {/* Pólizas que LLEGAN desde otras compañías (migraciones) */}
+                            {(() => {
+                              const migrations = migrationMatrix.filter(m => m.dest === origin && m.origin !== origin && m.origin !== 'Nueva Póliza');
+                              if (migrations.length === 0) return null;
 
-                            const totalNew = newPolicies.reduce((acc, m) => acc + m.pol, 0);
-                            const totalMiemNew = newPolicies.reduce((acc, m) => acc + m.miem, 0);
+                              const totalMigrations = migrations.reduce((acc, m) => acc + m.pol, 0);
+                              const totalMiemMigrations = migrations.reduce((acc, m) => acc + m.miem, 0);
 
-                            return (
-                              <div
-                                onClick={() => openModal(
-                                  `Nuevas Pólizas en ${origin}`,
-                                  item => item.compania2026 === origin && item.nuevo
-                                )}
-                                className="p-3 rounded-lg border-2 bg-amber-50 border-amber-200 cursor-pointer transition-transform hover:scale-105 hover:bg-amber-100">
-                                <div className="flex items-center justify-between mb-2">
-                                  <div className="flex items-center gap-2">
-                                    <TrendingUp className="text-amber-600" size={20} />
-                                    <span className="text-xs font-bold uppercase text-amber-700">Nuevas</span>
+                              return (
+                                <div
+                                  onClick={() => openModal(
+                                    `Migraciones hacia ${origin}`,
+                                    item => item.compania2026 === origin && item.COMPANIA !== origin && !item.nuevo
+                                  )}
+                                  className="p-3 rounded-lg border-2 bg-indigo-50 border-indigo-200 cursor-pointer transition-transform hover:scale-105 hover:bg-indigo-100">
+                                  <div className="flex items-center justify-between mb-2">
+                                    <div className="flex items-center gap-2">
+                                      <TrendingUp className="text-indigo-600" size={20} />
+                                      <span className="text-xs font-bold uppercase text-indigo-700">Migraciones</span>
+                                    </div>
                                   </div>
-                                </div>
 
-                                <p className="text-sm font-bold mb-1 text-amber-800">← Pólizas nuevas 2026</p>
+                                  <p className="text-sm font-bold mb-1 text-indigo-800">← Desde otras compañías</p>
 
-                                <div className="flex items-baseline gap-2 mb-1">
-                                  <p className="text-2xl font-black text-amber-900">{totalNew}</p>
-                                  <p className="text-sm font-bold text-slate-600">pólizas</p>
+                                  <div className="flex items-baseline gap-2 mb-1">
+                                    <p className="text-2xl font-black text-indigo-900">{totalMigrations}</p>
+                                    <p className="text-sm font-bold text-slate-600">pólizas</p>
+                                  </div>
+                                  <p className="text-xs text-slate-600">{totalMiemMigrations} miembros</p>
                                 </div>
-                                <p className="text-xs text-slate-600">{totalMiemNew} miembros</p>
-                              </div>
-                            );
-                          })()}
+                              );
+                            })()}
+
+                            {/* Pólizas completamente NUEVAS */}
+                            {(() => {
+                              const newPolicies = migrationMatrix.filter(m => m.dest === origin && m.origin === 'Nueva Póliza');
+                              if (newPolicies.length === 0) return null;
+
+                              const totalNew = newPolicies.reduce((acc, m) => acc + m.pol, 0);
+                              const totalMiemNew = newPolicies.reduce((acc, m) => acc + m.miem, 0);
+
+                              return (
+                                <div
+                                  onClick={() => openModal(
+                                    `Nuevas Pólizas en ${origin}`,
+                                    item => item.compania2026 === origin && item.nuevo
+                                  )}
+                                  className="p-3 rounded-lg border-2 bg-amber-50 border-amber-200 cursor-pointer transition-transform hover:scale-105 hover:bg-amber-100">
+                                  <div className="flex items-center justify-between mb-2">
+                                    <div className="flex items-center gap-2">
+                                      <TrendingUp className="text-amber-600" size={20} />
+                                      <span className="text-xs font-bold uppercase text-amber-700">Nuevas</span>
+                                    </div>
+                                  </div>
+
+                                  <p className="text-sm font-bold mb-1 text-amber-800">← Pólizas nuevas 2026</p>
+
+                                  <div className="flex items-baseline gap-2 mb-1">
+                                    <p className="text-2xl font-black text-amber-900">{totalNew}</p>
+                                    <p className="text-sm font-bold text-slate-600">pólizas</p>
+                                  </div>
+                                  <p className="text-xs text-slate-600">{totalMiemNew} miembros</p>
+                                </div>
+                              );
+                            })()}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                });
-              })()}
-            </div>
+                    );
+                  });
+                })()}
+              </div>
+            )}
+
+            {/* Gráfico Tab - Sankey Diagram */}
+            {migrationTab === 'grafico' && (
+              <div className="mt-8">
+                <SankeyDiagram migrationMatrix={migrationMatrix} />
+              </div>
+            )}
           </div>
         )}
 
