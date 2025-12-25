@@ -13,8 +13,8 @@ const App = () => {
   const [loading, setLoading] = useState(true);
   const [selectedCompanies, setSelectedCompanies] = useState([]);
   const [selectedSankeyCompanies, setSelectedSankeyCompanies] = useState([]); // Para filtro de Sankey
-  const [filterOpen, setFilterOpen] = useState(false);
   const [sankeyFilterOpen, setSankeyFilterOpen] = useState(false); // Para dropdown de Sankey
+  const [filterOpen, setFilterOpen] = useState(false);
   const [renewalFilter, setRenewalFilter] = useState('all'); // 'all', 'renewed', 'not-renewed', 'new'
 
   // Estado para el modal de detalles
@@ -547,6 +547,71 @@ const App = () => {
                     )}
                   </div>
                 )}
+
+                {/* Filtro de compañías - solo en pestaña Gráfico */}
+                {migrationTab === 'grafico' && (
+                  <div className="relative">
+                    <button
+                      onClick={() => setSankeyFilterOpen(!sankeyFilterOpen)}
+                      className="flex items-center gap-2 px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors"
+                    >
+                      <Search size={16} className="text-slate-600" />
+                      <span className="text-sm font-semibold text-slate-700">
+                        {selectedSankeyCompanies.length === 0
+                          ? 'Todas las compañías'
+                          : `${selectedSankeyCompanies.length} seleccionada${selectedSankeyCompanies.length > 1 ? 's' : ''}`}
+                      </span>
+                    </button>
+
+                    {sankeyFilterOpen && (
+                      <>
+                        <div
+                          className="fixed inset-0 z-10"
+                          onClick={() => setSankeyFilterOpen(false)}
+                        />
+
+                        <div className="absolute right-0 mt-2 w-64 bg-white border border-slate-200 rounded-lg shadow-lg z-20 max-h-96 overflow-y-auto">
+                          <div className="p-3 border-b border-slate-200">
+                            <button
+                              onClick={() => setSelectedSankeyCompanies([])}
+                              className="text-xs font-semibold text-teal-600 hover:text-teal-700"
+                            >
+                              Limpiar filtro
+                            </button>
+                          </div>
+                          <div className="p-2">
+                            {(() => {
+                              const companies = [...new Set(migrationMatrix.map(m => m.origin).filter(o => o !== 'Nueva Póliza'))].sort();
+                              return companies.map(company => (
+                                <label
+                                  key={company}
+                                  className="flex items-center gap-2 px-3 py-2 hover:bg-slate-50 rounded cursor-pointer"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <input
+                                    type="checkbox"
+                                    checked={selectedSankeyCompanies.includes(company)}
+                                    onChange={(e) => {
+                                      e.stopPropagation();
+                                      if (e.target.checked) {
+                                        setSelectedSankeyCompanies([...selectedSankeyCompanies, company]);
+                                      } else {
+                                        setSelectedSankeyCompanies(selectedSankeyCompanies.filter(c => c !== company));
+                                      }
+                                    }}
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="w-4 h-4 text-teal-600 rounded border-slate-300 focus:ring-teal-500"
+                                  />
+                                  <span className="text-sm text-slate-700">{company}</span>
+                                </label>
+                              ));
+                            })()}
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* Tab Navigation */}
@@ -796,15 +861,9 @@ const App = () => {
             {migrationTab === 'grafico' && (
               <div className="mt-8">
                 <SankeyDiagram
-                  migrationMatrix={
-                    selectedSankeyCompanies.length === 0
-                      ? migrationMatrix
-                      : migrationMatrix.filter(m => selectedSankeyCompanies.includes(m.origin))
-                  }
+                  migrationMatrix={migrationMatrix}
                   selectedCompanies={selectedSankeyCompanies}
                   onCompaniesChange={setSelectedSankeyCompanies}
-                  filterOpen={sankeyFilterOpen}
-                  onFilterToggle={() => setSankeyFilterOpen(!sankeyFilterOpen)}
                 />
               </div>
             )}
