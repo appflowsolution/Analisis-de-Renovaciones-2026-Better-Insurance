@@ -892,7 +892,8 @@ const App = () => {
                           company: row.COMPANIA,
                           polizas2025: 0,
                           polizas2026: 0,
-                          noRenovo: 0
+                          noRenovo: 0,
+                          fidelizadas: 0
                         };
                       }
                       companyStats[row.COMPANIA].polizas2025++;
@@ -907,18 +908,25 @@ const App = () => {
                           company: row.COMPANIA,
                           polizas2025: 0,
                           polizas2026: 0,
-                          noRenovo: 0
+                          noRenovo: 0,
+                          fidelizadas: 0
                         };
                       }
                       companyStats[row.COMPANIA].polizas2026++;
                     }
                   });
 
-                  // Calcular pólizas no renovadas desde migrationMatrix
+                  // Calcular pólizas no renovadas y fidelizadas desde migrationMatrix
                   migrationMatrix.forEach(m => {
-                    if (m.origin !== 'Nueva Póliza' && m.dest === 'No Renovó') {
-                      if (companyStats[m.origin]) {
-                        companyStats[m.origin].noRenovo = m.pol;
+                    if (m.origin !== 'Nueva Póliza') {
+                      if (m.dest === 'No Renovó') {
+                        if (companyStats[m.origin]) {
+                          companyStats[m.origin].noRenovo = m.pol;
+                        }
+                      } else if (m.origin === m.dest) {
+                        if (companyStats[m.origin]) {
+                          companyStats[m.origin].fidelizadas = m.pol;
+                        }
                       }
                     }
                   });
@@ -958,11 +966,16 @@ const App = () => {
                     mayorDisminucion: [...statsArray]
                       .filter(s => s.cambioPorcentual < 0)
                       .sort((a, b) => a.cambioPorcentual - b.cambioPorcentual)
+                      .slice(0, 5),
+
+                    mayorFidelizacion: [...statsArray]
+                      .filter(s => s.fidelizadas > 0)
+                      .sort((a, b) => b.fidelizadas - a.fidelizadas)
                       .slice(0, 5)
                   };
 
                   return (
-                    <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-start">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 items-start">
                       {/* Columna 1: No Renovaron */}
                       <div className="space-y-4">
                         <div className="bg-rose-50 rounded-lg p-4 border-2 border-rose-200 h-24 flex flex-col justify-center">
@@ -1032,7 +1045,7 @@ const App = () => {
                       {/* Columna 3: Menos Pólizas (Absoluto) */}
                       <div className="space-y-4">
                         <div className="bg-rose-50 rounded-lg p-4 border-2 border-rose-200 h-24 flex flex-col justify-center">
-                          <h4 className="text-sm font-bold text-rose-800 uppercase mb-1">
+                          <h4 className="text-sm font-semibold text-rose-800 uppercase mb-1">
                             Top 5 - Menos Pólizas
                           </h4>
                           <p className="text-xs text-rose-600">
@@ -1123,6 +1136,39 @@ const App = () => {
                           {rankings.mayorDisminucion.length === 0 && (
                             <p className="text-sm text-slate-400 text-center py-8">
                               No hay datos disponibles
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Columna 6: Mayor Fidelización */}
+                      <div className="space-y-4">
+                        <div className="bg-indigo-50 rounded-lg p-4 border-2 border-indigo-200 h-24 flex flex-col justify-center">
+                          <h4 className="text-sm font-semibold text-indigo-800 uppercase mb-1">
+                            Top 5 - Más Fidelizadas
+                          </h4>
+                          <p className="text-xs text-indigo-600">
+                            Mayor cantidad de renovaciones
+                          </p>
+                        </div>
+                        <div className="space-y-3">
+                          {rankings.mayorFidelizacion.map((stat, idx) => (
+                            <div key={stat.company} className="bg-white rounded-lg p-3 shadow-sm border border-slate-200 min-h-[90px]">
+                              <div className="flex items-start justify-between mb-1">
+                                <span className="text-xl font-semibold text-indigo-600">#{idx + 1}</span>
+                                <span className="px-2 py-1 bg-indigo-100 text-indigo-700 text-xs font-medium rounded">
+                                  {stat.fidelizadas} ret.
+                                </span>
+                              </div>
+                              <h5 className="font-medium text-slate-800 text-sm mb-1">{stat.company}</h5>
+                              <p className="text-xs text-slate-500">
+                                {stat.polizas2025 > 0 ? Math.round((stat.fidelizadas / stat.polizas2025) * 100) : 0}% efectividad
+                              </p>
+                            </div>
+                          ))}
+                          {rankings.mayorFidelizacion.length === 0 && (
+                            <p className="text-sm text-slate-400 text-center py-8">
+                              No hay renovaciones
                             </p>
                           )}
                         </div>
@@ -1311,7 +1357,7 @@ const App = () => {
             const maxMembers = Math.max(...data.map(d => d.members));
             return (
               <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-                <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
+                <h3 className="text-lg font-semibold text-slate-800 mb-6 flex items-center gap-2">
                   <div className={`w-1 h-6 rounded-full ${color}`}></div>
                   {title}
                 </h3>
@@ -1319,10 +1365,10 @@ const App = () => {
                   {data.map((item, idx) => (
                     <div key={idx} className="group relative">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-semibold text-slate-700 truncate max-w-[200px]">{item.name}</span>
+                        <span className="text-sm font-medium text-slate-700 truncate max-w-[200px]">{item.name}</span>
                         <div className="flex items-center gap-3">
                           <span className="text-xs text-slate-500">{item.policies} pólizas</span>
-                          <span className="text-sm font-bold text-slate-900">{item.members} miembros</span>
+                          <span className="text-sm font-semibold text-slate-900">{item.members} miembros</span>
                         </div>
                       </div>
 
@@ -1347,7 +1393,7 @@ const App = () => {
 
                       {/* Tooltip personalizado */}
                       <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 bg-slate-800 text-white text-xs rounded-lg p-3 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 shadow-xl">
-                        <div className="font-bold text-sm mb-2 border-b border-slate-600 pb-1">{item.name}</div>
+                        <div className="font-semibold text-sm mb-2 border-b border-slate-600 pb-1">{item.name}</div>
                         <div className="space-y-1">
                           <div className="flex justify-between items-center">
                             <span className="flex items-center gap-1.5">
