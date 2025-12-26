@@ -219,18 +219,18 @@ const App = () => {
             <Icon className="text-white" size={24} />
           </div>
           {badge && (
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wide">{badge}</span>
+            <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">{badge}</span>
           )}
         </div>
       </div>
       <div className="flex items-baseline gap-2 mb-2">
-        <h3 className="text-5xl font-black text-slate-900">{value}</h3>
-        <p className="text-base font-bold text-slate-600">{title}</p>
+        <h3 className="text-4xl font-semibold text-slate-900">{value}</h3>
+        <p className="text-base font-medium text-slate-600">{title}</p>
       </div>
       <div className="flex items-center justify-between">
         <p className="text-sm text-slate-500 font-medium">{members} miembros</p>
         {percentage !== undefined && (
-          <p className="text-sm text-slate-600 font-bold">{percentage}%</p>
+          <p className="text-sm text-slate-600 font-medium">{percentage}%</p>
         )}
       </div>
     </div>
@@ -254,7 +254,7 @@ const App = () => {
           <div className="flex items-center gap-6">
             <img src={logo} alt="Better Insurance" className="h-20 object-contain" />
             <div className="border-l-2 border-teal-500 pl-6">
-              <h1 className="text-3xl font-black text-slate-900 mb-1">Análisis de Renovaciones</h1>
+              <h1 className="text-3xl font-bold text-slate-900 mb-1">Análisis de Renovaciones</h1>
               <p className="text-sm text-slate-600 font-semibold">Período 2025-2026</p>
             </div>
           </div>
@@ -272,7 +272,7 @@ const App = () => {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold transition-all ${activeTab === tab.id
+              className={`flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-medium transition-all ${activeTab === tab.id
                 ? 'bg-teal-500 text-white shadow-md'
                 : 'text-slate-800 bg-white hover:bg-slate-100'
                 }`}
@@ -309,51 +309,51 @@ const App = () => {
 
             {/* Análisis por Captador */}
             <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
-              <h3 className="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">
+              <h3 className="text-2xl font-semibold text-slate-800 mb-6 flex items-center gap-3">
                 <Target className="text-teal-500" size={28} />
                 Análisis por Captador
               </h3>
               <div className="space-y-6">
                 {captadorStats.map((captador, idx) => (
                   <div key={idx} className="border border-slate-200 rounded-xl p-6 hover:shadow-md transition-shadow">
-                    <h4 className="text-lg font-bold text-slate-800 mb-4">{captador.nombre}</h4>
+                    <h4 className="text-lg font-semibold text-slate-800 mb-4">{captador.nombre}</h4>
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                       <div className="text-center p-4 bg-slate-50 rounded-lg">
                         <div className="flex items-baseline justify-center gap-2 mb-1">
-                          <p className="text-3xl font-black text-slate-900">{captador.polizas2025}</p>
-                          <p className="text-sm font-bold text-slate-600">pólizas</p>
+                          <p className="text-2xl font-semibold text-slate-900">{captador.polizas2025}</p>
+                          <p className="text-sm font-medium text-slate-600">pólizas</p>
                         </div>
                         <p className="text-xs text-slate-500 font-medium">{captador.miembros2025} miembros</p>
                         <p className="text-xs text-slate-400 mt-1">Base 2025</p>
                       </div>
                       <div className="text-center p-4 bg-emerald-50 rounded-lg">
                         <div className="flex items-baseline justify-center gap-2 mb-1">
-                          <p className="text-3xl font-black text-emerald-700">{captador.renovadas}</p>
-                          <p className="text-sm font-bold text-emerald-600">renovadas</p>
+                          <p className="text-2xl font-semibold text-emerald-700">{captador.renovadas}</p>
+                          <p className="text-sm font-medium text-emerald-600">renovadas</p>
                         </div>
                         <p className="text-xs text-emerald-600 font-medium">{captador.miembrosRenovados} miembros</p>
                         <p className="text-xs text-emerald-500 mt-1">{captador.polizas2025 > 0 ? Math.round((captador.renovadas / captador.polizas2025) * 100) : 0}% retención</p>
                       </div>
                       <div className="text-center p-4 bg-rose-50 rounded-lg">
                         <div className="flex items-baseline justify-center gap-2 mb-1">
-                          <p className="text-3xl font-black text-rose-700">{captador.perdidas}</p>
-                          <p className="text-sm font-bold text-rose-600">no renovadas</p>
+                          <p className="text-2xl font-semibold text-rose-700">{captador.perdidas}</p>
+                          <p className="text-sm font-medium text-rose-600">no renovadas</p>
                         </div>
                         <p className="text-xs text-rose-600 font-medium">{captador.miembrosPerdidos} miembros</p>
                         <p className="text-xs text-rose-500 mt-1">{captador.polizas2025 > 0 ? Math.round((captador.perdidas / captador.polizas2025) * 100) : 0}% pérdida</p>
                       </div>
                       <div className="text-center p-4 bg-blue-50 rounded-lg">
                         <div className="flex items-baseline justify-center gap-2 mb-1">
-                          <p className="text-3xl font-black text-blue-700">{captador.nuevas}</p>
-                          <p className="text-sm font-bold text-blue-600">nuevas</p>
+                          <p className="text-2xl font-semibold text-blue-700">{captador.nuevas}</p>
+                          <p className="text-sm font-medium text-blue-600">nuevas</p>
                         </div>
                         <p className="text-xs text-blue-600 font-medium">{captador.miembrosNuevos} miembros</p>
                         <p className="text-xs text-blue-500 mt-1">Pólizas 2026</p>
                       </div>
                       <div className="text-center p-4 bg-teal-50 rounded-lg">
                         <div className="flex items-baseline justify-center gap-2 mb-1">
-                          <p className="text-3xl font-black text-teal-700">{captador.polizas2026}</p>
-                          <p className="text-sm font-bold text-teal-600">pólizas</p>
+                          <p className="text-2xl font-semibold text-teal-700">{captador.polizas2026}</p>
+                          <p className="text-sm font-medium text-teal-600">pólizas</p>
                         </div>
                         <p className="text-xs text-teal-600 font-medium">{captador.miembros2026} miembros</p>
                         <p className="text-xs text-teal-500 mt-1">Base 2026</p>
@@ -366,7 +366,7 @@ const App = () => {
 
             {/* Análisis Financiero */}
             <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
-              <h3 className="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">
+              <h3 className="text-2xl font-semibold text-slate-800 mb-6 flex items-center gap-3">
                 <DollarSign className="text-teal-500" size={28} />
                 Análisis Financiero - Comisiones
               </h3>
@@ -376,10 +376,10 @@ const App = () => {
                 <div className="bg-slate-50 p-6 rounded-xl">
                   <div className="flex items-center gap-2 mb-3">
                     <DollarSign className="text-slate-700" size={20} />
-                    <span className="text-xs font-bold text-slate-500 uppercase">Base 2025</span>
+                    <span className="text-xs font-medium text-slate-500 uppercase">Base 2025</span>
                   </div>
                   <div className="flex items-baseline gap-2 mb-1">
-                    <p className="text-4xl font-black text-slate-900">${Math.round(stats.comision2025).toLocaleString()}</p>
+                    <p className="text-3xl font-semibold text-slate-900">${Math.round(stats.comision2025).toLocaleString()}</p>
                   </div>
                   <p className="text-xs text-slate-500">Comisión total</p>
                 </div>
@@ -387,10 +387,10 @@ const App = () => {
                 <div className="bg-emerald-50 p-6 rounded-xl">
                   <div className="flex items-center gap-2 mb-3">
                     <DollarSign className="text-emerald-700" size={20} />
-                    <span className="text-xs font-bold text-emerald-600 uppercase">Renovadas</span>
+                    <span className="text-xs font-medium text-emerald-600 uppercase">Renovadas</span>
                   </div>
                   <div className="flex items-baseline gap-2 mb-1">
-                    <p className="text-4xl font-black text-emerald-700">${Math.round(DATA_2026.filter(p => p.NEW_REN === 'Renewal').reduce((acc, curr) => acc + curr.COMISION, 0)).toLocaleString()}</p>
+                    <p className="text-3xl font-semibold text-emerald-700">${Math.round(DATA_2026.filter(p => p.NEW_REN === 'Renewal').reduce((acc, curr) => acc + curr.COMISION, 0)).toLocaleString()}</p>
                   </div>
                   <p className="text-xs text-emerald-600">{DATA_2026.filter(p => p.NEW_REN === 'Renewal').length} pólizas</p>
                   <p className="text-xs text-emerald-500">{stats.total2025 > 0 ? Math.round((DATA_2026.filter(p => p.NEW_REN === 'Renewal').length / stats.total2025) * 100) : 0}% retención</p>
@@ -399,10 +399,10 @@ const App = () => {
                 <div className="bg-rose-50 p-6 rounded-xl">
                   <div className="flex items-center gap-2 mb-3">
                     <DollarSign className="text-rose-700" size={20} />
-                    <span className="text-xs font-bold text-rose-600 uppercase">No Renovadas</span>
+                    <span className="text-xs font-medium text-rose-600 uppercase">No Renovadas</span>
                   </div>
                   <div className="flex items-baseline gap-2 mb-1">
-                    <p className="text-4xl font-black text-rose-700">${Math.round(mergedData.filter(d => !d.renovado && !d.nuevo).reduce((acc, curr) => acc + curr.COMISION, 0)).toLocaleString()}</p>
+                    <p className="text-3xl font-semibold text-rose-700">${Math.round(mergedData.filter(d => !d.renovado && !d.nuevo).reduce((acc, curr) => acc + curr.COMISION, 0)).toLocaleString()}</p>
                   </div>
                   <p className="text-xs text-rose-600">{stats.noRenovadas} pólizas</p>
                   <p className="text-xs text-rose-500">{stats.total2025 > 0 ? Math.round((stats.noRenovadas / stats.total2025) * 100) : 0}% pérdida</p>
@@ -411,10 +411,10 @@ const App = () => {
                 <div className="bg-blue-50 p-6 rounded-xl">
                   <div className="flex items-center gap-2 mb-3">
                     <DollarSign className="text-blue-700" size={20} />
-                    <span className="text-xs font-bold text-blue-600 uppercase">Nuevas</span>
+                    <span className="text-xs font-medium text-blue-600 uppercase">Nuevas</span>
                   </div>
                   <div className="flex items-baseline gap-2 mb-1">
-                    <p className="text-4xl font-black text-blue-700">${Math.round(DATA_2026.filter(p => p.NEW_REN === 'New').reduce((acc, curr) => acc + curr.COMISION, 0)).toLocaleString()}</p>
+                    <p className="text-3xl font-semibold text-blue-700">${Math.round(DATA_2026.filter(p => p.NEW_REN === 'New').reduce((acc, curr) => acc + curr.COMISION, 0)).toLocaleString()}</p>
                   </div>
                   <p className="text-xs text-blue-600">{DATA_2026.filter(p => p.NEW_REN === 'New').length} pólizas</p>
                 </div>
@@ -422,47 +422,47 @@ const App = () => {
                 <div className="bg-teal-50 p-6 rounded-xl border-2 border-teal-500">
                   <div className="flex items-center gap-2 mb-3">
                     <DollarSign className="text-teal-700" size={20} />
-                    <span className="text-xs font-bold text-teal-600 uppercase">Base 2026</span>
+                    <span className="text-xs font-medium text-teal-600 uppercase">Base 2026</span>
                   </div>
                   <div className="flex items-baseline gap-2 mb-1">
-                    <p className="text-4xl font-black text-teal-700">${Math.round(stats.comision2026).toLocaleString()}</p>
+                    <p className="text-3xl font-semibold text-teal-700">${Math.round(stats.comision2026).toLocaleString()}</p>
                   </div>
                   <p className="text-xs text-teal-600">{stats.polizas2026} pólizas</p>
                 </div>
               </div>
 
               {/* Análisis por Captador - Comisiones */}
-              <h4 className="text-xl font-bold text-slate-800 mb-4">Comisiones por Captador</h4>
+              <h4 className="text-xl font-semibold text-slate-800 mb-4">Comisiones por Captador</h4>
               <div className="space-y-6">
                 {captadorStats.map((captador, idx) => (
                   <div key={idx} className="border border-slate-200 rounded-xl p-6 hover:shadow-md transition-shadow">
-                    <h5 className="text-lg font-bold text-slate-800 mb-4">{captador.nombre}</h5>
+                    <h5 className="text-lg font-semibold text-slate-800 mb-4">{captador.nombre}</h5>
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                       <div className="text-center p-4 bg-slate-50 rounded-lg">
-                        <p className="text-xs font-bold text-slate-500 uppercase mb-2">Base 2025</p>
-                        <p className="text-2xl font-black text-slate-900">${Math.round(captador.comision2025).toLocaleString()}</p>
+                        <p className="text-xs font-medium text-slate-500 uppercase mb-2">Base 2025</p>
+                        <p className="text-xl font-semibold text-slate-900">${Math.round(captador.comision2025).toLocaleString()}</p>
                         <p className="text-xs text-slate-500 mt-1">{captador.polizas2025} pólizas</p>
                       </div>
                       <div className="text-center p-4 bg-emerald-50 rounded-lg">
-                        <p className="text-xs font-bold text-emerald-600 uppercase mb-2">Renovadas</p>
-                        <p className="text-2xl font-black text-emerald-700">${Math.round(captador.comisionRenovadas).toLocaleString()}</p>
+                        <p className="text-xs font-medium text-emerald-600 uppercase mb-2">Renovadas</p>
+                        <p className="text-xl font-semibold text-emerald-700">${Math.round(captador.comisionRenovadas).toLocaleString()}</p>
                         <p className="text-xs text-emerald-600 mt-1">{captador.renovadas} pólizas</p>
                         <p className="text-xs text-emerald-500 mt-1">{captador.polizas2025 > 0 ? Math.round((captador.renovadas / captador.polizas2025) * 100) : 0}% retención</p>
                       </div>
                       <div className="text-center p-4 bg-rose-50 rounded-lg">
-                        <p className="text-xs font-bold text-rose-600 uppercase mb-2">No Renovadas</p>
-                        <p className="text-2xl font-black text-rose-700">${Math.round(captador.comisionPerdidas).toLocaleString()}</p>
+                        <p className="text-xs font-medium text-rose-600 uppercase mb-2">No Renovadas</p>
+                        <p className="text-xl font-semibold text-rose-700">${Math.round(captador.comisionPerdidas).toLocaleString()}</p>
                         <p className="text-xs text-rose-600 mt-1">{captador.perdidas} pólizas</p>
                         <p className="text-xs text-rose-500 mt-1">{captador.polizas2025 > 0 ? Math.round((captador.perdidas / captador.polizas2025) * 100) : 0}% pérdida</p>
                       </div>
                       <div className="text-center p-4 bg-blue-50 rounded-lg">
-                        <p className="text-xs font-bold text-blue-600 uppercase mb-2">Nuevas</p>
-                        <p className="text-2xl font-black text-blue-700">${Math.round(captador.comisionNuevas).toLocaleString()}</p>
+                        <p className="text-xs font-medium text-blue-600 uppercase mb-2">Nuevas</p>
+                        <p className="text-xl font-semibold text-blue-700">${Math.round(captador.comisionNuevas).toLocaleString()}</p>
                         <p className="text-xs text-blue-600 mt-1">{captador.nuevas} pólizas</p>
                       </div>
                       <div className="text-center p-4 bg-teal-50 rounded-lg">
-                        <p className="text-xs font-bold text-teal-600 uppercase mb-2">Base 2026</p>
-                        <p className="text-2xl font-black text-teal-700">${Math.round(captador.comision2026).toLocaleString()}</p>
+                        <p className="text-xs font-medium text-teal-600 uppercase mb-2">Base 2026</p>
+                        <p className="text-xl font-semibold text-teal-700">${Math.round(captador.comision2026).toLocaleString()}</p>
                         <p className="text-xs text-teal-600 mt-1">{captador.polizas2026} pólizas</p>
                       </div>
                     </div>
@@ -634,6 +634,15 @@ const App = () => {
                 >
                   Gráfico
                 </button>
+                <button
+                  onClick={() => setMigrationTab('top5')}
+                  className={`px-6 py-3 font-semibold text-sm transition-colors border-b-2 ${migrationTab === 'top5'
+                    ? 'border-teal-500 text-teal-600'
+                    : 'border-transparent text-slate-500 hover:text-slate-700'
+                    }`}
+                >
+                  Top 5
+                </button>
               </div>
             </div>
 
@@ -684,24 +693,24 @@ const App = () => {
                     return (
                       <div key={origin} className="border border-slate-200 rounded-xl overflow-hidden">
                         {/* Header de la compañía */}
-                        <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                        <div className="bg-slate-50 px-4 py-3 border-b border-slate-200">
                           <div className="flex items-center justify-between">
-                            <h4 className="text-lg font-bold text-slate-800">{origin}</h4>
+                            <h4 className="text-lg font-semibold text-slate-800">{origin}</h4>
                             <div className="flex items-center gap-6">
                               <div className="text-left">
-                                <p className="text-xs text-slate-500 uppercase font-bold">Total 2025</p>
+                                <p className="text-xs text-slate-500 uppercase font-medium">Total 2025</p>
                                 <div className="flex items-baseline gap-2">
-                                  <p className="text-2xl font-black text-slate-900">{totalPol}</p>
-                                  <p className="text-sm font-bold text-slate-600">pólizas</p>
+                                  <p className="text-2xl font-semibold text-slate-900">{totalPol}</p>
+                                  <p className="text-sm font-medium text-slate-600">pólizas</p>
                                 </div>
                                 <p className="text-xs text-slate-500">{totalMiem} miembros</p>
                               </div>
                               <ArrowRightLeft className="text-slate-400" size={24} />
                               <div className="text-left">
-                                <p className="text-xs text-teal-600 uppercase font-bold">Total 2026</p>
+                                <p className="text-xs text-teal-600 uppercase font-medium">Total 2026</p>
                                 <div className="flex items-baseline gap-2">
-                                  <p className="text-2xl font-black text-teal-700">{total2026Pol}</p>
-                                  <p className="text-sm font-bold text-teal-600">pólizas</p>
+                                  <p className="text-2xl font-semibold text-teal-700">{total2026Pol}</p>
+                                  <p className="text-sm font-medium text-teal-600">pólizas</p>
                                 </div>
                                 <p className="text-xs text-teal-600">{total2026Miem} miembros</p>
                               </div>
@@ -710,7 +719,7 @@ const App = () => {
                         </div>
 
                         {/* Destinos */}
-                        <div className="p-6">
+                        <div className="p-4">
                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                             {/* Pólizas que SALEN de esta compañía */}
                             {destinations.sort((a, b) => {
@@ -736,7 +745,7 @@ const App = () => {
                                     );
                                   }
                                 }}
-                                className={`p-3 rounded-lg border-2 cursor-pointer transition-transform hover:scale-105 ${m.origin === m.dest
+                                className={`p-2 rounded-lg border-2 cursor-pointer transition-transform hover:scale-105 ${m.origin === m.dest
                                   ? 'bg-emerald-50 border-emerald-200 hover:bg-emerald-100'
                                   : m.dest === 'No Renovó'
                                     ? 'bg-rose-50 border-rose-200 hover:bg-rose-100'
@@ -749,7 +758,7 @@ const App = () => {
                                     ) : (
                                       <TrendingUp className={m.origin === m.dest ? 'text-emerald-600' : 'text-blue-600'} size={20} />
                                     )}
-                                    <span className={`text-xs font-bold uppercase ${m.origin === m.dest
+                                    <span className={`text-xs font-medium uppercase ${m.origin === m.dest
                                       ? 'text-emerald-700'
                                       : m.dest === 'No Renovó'
                                         ? 'text-rose-700'
@@ -760,7 +769,7 @@ const App = () => {
                                   </div>
                                 </div>
 
-                                <p className={`text-sm font-bold mb-1 ${m.origin === m.dest
+                                <p className={`text-sm font-medium mb-1 ${m.origin === m.dest
                                   ? 'text-emerald-800'
                                   : m.dest === 'No Renovó'
                                     ? 'text-rose-800'
@@ -770,13 +779,13 @@ const App = () => {
                                 </p>
 
                                 <div className="flex items-baseline gap-2 mb-1">
-                                  <p className={`text-2xl font-black ${m.origin === m.dest
+                                  <p className={`text-2xl font-semibold ${m.origin === m.dest
                                     ? 'text-emerald-900'
                                     : m.dest === 'No Renovó'
                                       ? 'text-rose-900'
                                       : 'text-blue-900'
                                     }`}>{m.pol}</p>
-                                  <p className="text-sm font-bold text-slate-600">pólizas</p>
+                                  <p className="text-sm font-medium text-slate-600">pólizas</p>
                                 </div>
                                 <p className="text-xs text-slate-600">{m.miem} miembros</p>
                               </div>
@@ -800,15 +809,15 @@ const App = () => {
                                   <div className="flex items-center justify-between mb-2">
                                     <div className="flex items-center gap-2">
                                       <TrendingUp className="text-indigo-600" size={20} />
-                                      <span className="text-xs font-bold uppercase text-indigo-700">Migraciones</span>
+                                      <span className="text-xs font-medium uppercase text-indigo-700">Migraciones</span>
                                     </div>
                                   </div>
 
-                                  <p className="text-sm font-bold mb-1 text-indigo-800">← Desde otras compañías</p>
+                                  <p className="text-sm font-medium mb-1 text-indigo-800">← Desde otras compañías</p>
 
                                   <div className="flex items-baseline gap-2 mb-1">
-                                    <p className="text-2xl font-black text-indigo-900">{totalMigrations}</p>
-                                    <p className="text-sm font-bold text-slate-600">pólizas</p>
+                                    <p className="text-2xl font-semibold text-indigo-900">{totalMigrations}</p>
+                                    <p className="text-sm font-medium text-slate-600">pólizas</p>
                                   </div>
                                   <p className="text-xs text-slate-600">{totalMiemMigrations} miembros</p>
                                 </div>
@@ -833,15 +842,15 @@ const App = () => {
                                   <div className="flex items-center justify-between mb-2">
                                     <div className="flex items-center gap-2">
                                       <TrendingUp className="text-amber-600" size={20} />
-                                      <span className="text-xs font-bold uppercase text-amber-700">Nuevas</span>
+                                      <span className="text-xs font-medium uppercase text-amber-700">Nuevas</span>
                                     </div>
                                   </div>
 
-                                  <p className="text-sm font-bold mb-1 text-amber-800">← Pólizas nuevas 2026</p>
+                                  <p className="text-sm font-medium mb-1 text-amber-800">← Pólizas nuevas 2026</p>
 
                                   <div className="flex items-baseline gap-2 mb-1">
-                                    <p className="text-2xl font-black text-amber-900">{totalNew}</p>
-                                    <p className="text-sm font-bold text-slate-600">pólizas</p>
+                                    <p className="text-2xl font-semibold text-amber-900">{totalNew}</p>
+                                    <p className="text-sm font-medium text-slate-600">pólizas</p>
                                   </div>
                                   <p className="text-xs text-slate-600">{totalMiemNew} miembros</p>
                                 </div>
@@ -865,6 +874,262 @@ const App = () => {
                   selectedCompanies={selectedSankeyCompanies}
                   onCompaniesChange={setSelectedSankeyCompanies}
                 />
+              </div>
+            )}
+
+            {/* Top 5 Tab - Rankings */}
+            {migrationTab === 'top5' && (
+              <div className="mt-8">
+                {(() => {
+                  // Calcular estadísticas por compañía
+                  const companyStats = {};
+
+                  // Inicializar con todas las compañías de 2025
+                  DATA_2025.forEach(row => {
+                    if (row.COMPANIA && row.COMPANIA !== 'Nueva Póliza') {
+                      if (!companyStats[row.COMPANIA]) {
+                        companyStats[row.COMPANIA] = {
+                          company: row.COMPANIA,
+                          polizas2025: 0,
+                          polizas2026: 0,
+                          noRenovo: 0
+                        };
+                      }
+                      companyStats[row.COMPANIA].polizas2025++;
+                    }
+                  });
+
+                  // Agregar pólizas de 2026
+                  DATA_2026.forEach(row => {
+                    if (row.COMPANIA && row.COMPANIA !== 'Nueva Póliza') {
+                      if (!companyStats[row.COMPANIA]) {
+                        companyStats[row.COMPANIA] = {
+                          company: row.COMPANIA,
+                          polizas2025: 0,
+                          polizas2026: 0,
+                          noRenovo: 0
+                        };
+                      }
+                      companyStats[row.COMPANIA].polizas2026++;
+                    }
+                  });
+
+                  // Calcular pólizas no renovadas desde migrationMatrix
+                  migrationMatrix.forEach(m => {
+                    if (m.origin !== 'Nueva Póliza' && m.dest === 'No Renovó') {
+                      if (companyStats[m.origin]) {
+                        companyStats[m.origin].noRenovo = m.pol;
+                      }
+                    }
+                  });
+
+                  // Calcular cambios absolutos y porcentuales
+                  Object.values(companyStats).forEach(stat => {
+                    stat.cambioAbsoluto = stat.polizas2026 - stat.polizas2025;
+                    stat.cambioPorcentual = stat.polizas2025 > 0
+                      ? ((stat.polizas2026 - stat.polizas2025) / stat.polizas2025) * 100
+                      : 0;
+                  });
+
+                  // Crear rankings
+                  const statsArray = Object.values(companyStats);
+
+                  const rankings = {
+                    noRenovaron: [...statsArray]
+                      .filter(s => s.noRenovo > 0)
+                      .sort((a, b) => b.noRenovo - a.noRenovo)
+                      .slice(0, 5),
+
+                    masPolizas: [...statsArray]
+                      .filter(s => s.cambioAbsoluto > 0)
+                      .sort((a, b) => b.cambioAbsoluto - a.cambioAbsoluto)
+                      .slice(0, 5),
+
+                    menosPolizas: [...statsArray]
+                      .filter(s => s.cambioAbsoluto < 0)
+                      .sort((a, b) => a.cambioAbsoluto - b.cambioAbsoluto)
+                      .slice(0, 5),
+
+                    mayorCrecimiento: [...statsArray]
+                      .filter(s => s.cambioPorcentual > 0)
+                      .sort((a, b) => b.cambioPorcentual - a.cambioPorcentual)
+                      .slice(0, 5),
+
+                    mayorDisminucion: [...statsArray]
+                      .filter(s => s.cambioPorcentual < 0)
+                      .sort((a, b) => a.cambioPorcentual - b.cambioPorcentual)
+                      .slice(0, 5)
+                  };
+
+                  return (
+                    <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-start">
+                      {/* Columna 1: No Renovaron */}
+                      <div className="space-y-4">
+                        <div className="bg-rose-50 rounded-lg p-4 border-2 border-rose-200 h-24 flex flex-col justify-center">
+                          <h4 className="text-sm font-semibold text-rose-800 uppercase mb-1">
+                            Top 5 - No Renovaron
+                          </h4>
+                          <p className="text-xs text-rose-600">
+                            Más pólizas perdidas en 2025
+                          </p>
+                        </div>
+                        <div className="space-y-3">
+                          {rankings.noRenovaron.map((stat, idx) => (
+                            <div key={stat.company} className="bg-white rounded-lg p-3 shadow-sm border border-slate-200 min-h-[90px]">
+                              <div className="flex items-start justify-between mb-1">
+                                <span className="text-xl font-semibold text-rose-600">#{idx + 1}</span>
+                                <span className="px-2 py-1 bg-rose-100 text-rose-700 text-xs font-medium rounded">
+                                  {stat.noRenovo} pólizas
+                                </span>
+                              </div>
+                              <h5 className="font-medium text-slate-800 text-sm mb-1">{stat.company}</h5>
+                              <p className="text-xs text-slate-500">
+                                {stat.polizas2025} pólizas en 2025
+                              </p>
+                            </div>
+                          ))}
+                          {rankings.noRenovaron.length === 0 && (
+                            <p className="text-sm text-slate-400 text-center py-8">
+                              No hay datos disponibles
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Columna 2: Más Pólizas (Absoluto) */}
+                      <div className="space-y-4">
+                        <div className="bg-teal-50 rounded-lg p-4 border-2 border-teal-200 h-24 flex flex-col justify-center">
+                          <h4 className="text-sm font-semibold text-teal-800 uppercase mb-1">
+                            Top 5 - Más Pólizas
+                          </h4>
+                          <p className="text-xs text-teal-600">
+                            Mayor crecimiento absoluto
+                          </p>
+                        </div>
+                        <div className="space-y-3">
+                          {rankings.masPolizas.map((stat, idx) => (
+                            <div key={stat.company} className="bg-white rounded-lg p-3 shadow-sm border border-slate-200 min-h-[90px]">
+                              <div className="flex items-start justify-between mb-1">
+                                <span className="text-xl font-semibold text-teal-600">#{idx + 1}</span>
+                                <span className="px-2 py-1 bg-teal-100 text-teal-700 text-xs font-medium rounded">
+                                  +{stat.cambioAbsoluto}
+                                </span>
+                              </div>
+                              <h5 className="font-medium text-slate-800 text-sm mb-1">{stat.company}</h5>
+                              <p className="text-xs text-slate-500">
+                                {stat.polizas2025} → {stat.polizas2026} pólizas
+                              </p>
+                            </div>
+                          ))}
+                          {rankings.masPolizas.length === 0 && (
+                            <p className="text-sm text-slate-400 text-center py-8">
+                              No hay datos disponibles
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Columna 3: Menos Pólizas (Absoluto) */}
+                      <div className="space-y-4">
+                        <div className="bg-rose-50 rounded-lg p-4 border-2 border-rose-200 h-24 flex flex-col justify-center">
+                          <h4 className="text-sm font-bold text-rose-800 uppercase mb-1">
+                            Top 5 - Menos Pólizas
+                          </h4>
+                          <p className="text-xs text-rose-600">
+                            Mayor pérdida absoluta
+                          </p>
+                        </div>
+                        <div className="space-y-3">
+                          {rankings.menosPolizas.map((stat, idx) => (
+                            <div key={stat.company} className="bg-white rounded-lg p-3 shadow-sm border border-slate-200 min-h-[90px]">
+                              <div className="flex items-start justify-between mb-1">
+                                <span className="text-xl font-semibold text-rose-600">#{idx + 1}</span>
+                                <span className="px-2 py-1 bg-rose-100 text-rose-700 text-xs font-medium rounded">
+                                  {stat.cambioAbsoluto}
+                                </span>
+                              </div>
+                              <h5 className="font-medium text-slate-800 text-sm mb-1">{stat.company}</h5>
+                              <p className="text-xs text-slate-500">
+                                {stat.polizas2025} → {stat.polizas2026} pólizas
+                              </p>
+                            </div>
+                          ))}
+                          {rankings.menosPolizas.length === 0 && (
+                            <p className="text-sm text-slate-400 text-center py-8">
+                              No hay datos disponibles
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Columna 4: Mayor Crecimiento % */}
+                      <div className="space-y-4">
+                        <div className="bg-emerald-50 rounded-lg p-4 border-2 border-emerald-200 h-24 flex flex-col justify-center">
+                          <h4 className="text-sm font-semibold text-emerald-800 uppercase mb-1">
+                            Top 5 - Mayor Crecimiento %
+                          </h4>
+                          <p className="text-xs text-emerald-600">
+                            Mayor % de crecimiento
+                          </p>
+                        </div>
+                        <div className="space-y-3">
+                          {rankings.mayorCrecimiento.map((stat, idx) => (
+                            <div key={stat.company} className="bg-white rounded-lg p-3 shadow-sm border border-slate-200 min-h-[90px]">
+                              <div className="flex items-start justify-between mb-1">
+                                <span className="text-xl font-semibold text-emerald-600">#{idx + 1}</span>
+                                <span className="px-2 py-1 bg-emerald-100 text-emerald-700 text-xs font-medium rounded">
+                                  +{stat.cambioPorcentual.toFixed(1)}%
+                                </span>
+                              </div>
+                              <h5 className="font-medium text-slate-800 text-sm mb-1">{stat.company}</h5>
+                              <p className="text-xs text-slate-500">
+                                {stat.polizas2025} → {stat.polizas2026} pólizas
+                              </p>
+                            </div>
+                          ))}
+                          {rankings.mayorCrecimiento.length === 0 && (
+                            <p className="text-sm text-slate-400 text-center py-8">
+                              No hay datos disponibles
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Columna 5: Mayor Disminución % */}
+                      <div className="space-y-4">
+                        <div className="bg-red-50 rounded-lg p-4 border-2 border-red-200 h-24 flex flex-col justify-center">
+                          <h4 className="text-sm font-semibold text-red-800 uppercase mb-1">
+                            Top 5 - Mayor Disminución %
+                          </h4>
+                          <p className="text-xs text-red-600">
+                            Mayor % de pérdida
+                          </p>
+                        </div>
+                        <div className="space-y-3">
+                          {rankings.mayorDisminucion.map((stat, idx) => (
+                            <div key={stat.company} className="bg-white rounded-lg p-3 shadow-sm border border-slate-200 min-h-[90px]">
+                              <div className="flex items-start justify-between mb-1">
+                                <span className="text-xl font-semibold text-red-600">#{idx + 1}</span>
+                                <span className="px-2 py-1 bg-red-100 text-red-700 text-xs font-medium rounded">
+                                  {stat.cambioPorcentual.toFixed(1)}%
+                                </span>
+                              </div>
+                              <h5 className="font-medium text-slate-800 text-sm mb-1">{stat.company}</h5>
+                              <p className="text-xs text-slate-500">
+                                {stat.polizas2025} → {stat.polizas2026} pólizas
+                              </p>
+                            </div>
+                          ))}
+                          {rankings.mayorDisminucion.length === 0 && (
+                            <p className="text-sm text-slate-400 text-center py-8">
+                              No hay datos disponibles
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
             )}
           </div>
