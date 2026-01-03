@@ -26,7 +26,10 @@ if %errorlevel% neq 0 (
 echo.
 echo ========================================
 echo   Despliegue completado exitosamente!
-echo   URL: https://bi-renov-2026-v2.web.app
+echo   URLs disponibles:
+echo   - https://bi-renov-2026-v2.web.app
+echo   - https://bi-renov-2026-v2.firebaseapp.com
 echo ========================================
+echo.
 echo.
 pause
